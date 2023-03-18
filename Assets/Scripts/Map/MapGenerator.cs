@@ -33,7 +33,7 @@ public class MapGenerator : MonoBehaviour
             this.y = y;
         }
     }
-
+    
     Coordinate GetRandomCoordinate()
     {
         Coordinate randomCoordinate = shuffledCoordinates.Dequeue(); // FIFO
