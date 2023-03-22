@@ -21,6 +21,9 @@ public class MapGenerator : MonoBehaviour
 
     List<Coordinate> allTileCoordinates;
     Queue<Coordinate> shuffledCoordinates;
+    
+    Queue<Coordinate> shuffledOpenTileCoordinates;
+    Transform[,] tileMap;
 
     [SerializeField] Map[] maps;
     [SerializeField] int mapIndex;
@@ -34,6 +37,7 @@ public class MapGenerator : MonoBehaviour
     public void GenerateMap()
     {
         currentMap = maps[mapIndex];
+        tileMap = new Transform[currentMap.mapSize.x, currentMap.mapSize.y];
 
         System.Random prng = new System.Random(currentMap.seed); // prng -> pseudo random number generation/generator
 
@@ -71,6 +75,7 @@ public class MapGenerator : MonoBehaviour
                 Transform newTile = Instantiate(tilePrefab, tilepPosition, Quaternion.Euler(90,0,0));
                 newTile.localScale = Vector3.one * (1 - outlinePercent) * tileSize;
                 newTile.parent = mapHolder;
+                tileMap[x, y] = newTile;
             }
         }
 
@@ -79,6 +84,8 @@ public class MapGenerator : MonoBehaviour
 
         int obstacleCount = (int)(currentMap.mapSize.x * currentMap.mapSize.y * currentMap.obstaclePercentage);
         int currentObstacleCount = 0;
+
+        List<Coordinate> allOpentileCoordinates = new List<Coordinate>(allTileCoordinates);
 
         for (int i = 0; i < obstacleCount; i++)
         {
@@ -103,14 +110,16 @@ public class MapGenerator : MonoBehaviour
                 obstacleMaterial.color = Color.Lerp(currentMap.foregroundColor, currentMap.backgroundColor, colourPercentage);
                 obstacleRenderer.sharedMaterial = obstacleMaterial;
 
+                allOpentileCoordinates.Remove(randomCoordinate);
             }
             else
             {
                 obstacleMap[randomCoordinate.x, randomCoordinate.y] = false;
                 currentObstacleCount--;
             }
-           
         }
+
+        shuffledOpenTileCoordinates = new Queue<Coordinate>(Utility.ShuffleArray(allOpentileCoordinates.ToArray(), currentMap.seed));
 
         // Creating Navmesh mask
         // Left Mask
@@ -179,6 +188,7 @@ public class MapGenerator : MonoBehaviour
         return targetAccessibleTileCount == accessibleTileCount;
     }
 
+
     [System.Serializable]
     public struct Coordinate
     {
@@ -211,12 +221,29 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    public Transform GetTileFromPosition (Vector3 position)
+    {
+        int x = Mathf.RoundToInt(position.x / tileSize + (currentMap.mapSize.x - 1) / 2f);
+        int y = Mathf.RoundToInt(position.z / tileSize + (currentMap.mapSize.y - 1) / 2f);
+
+        x = Mathf.Clamp(x, 0, tileMap.GetLength(0) - 1);
+        y = Mathf.Clamp(y, 0, tileMap.GetLength(1) - 1);
+
+        return tileMap[x, y];
+    }
 
     Coordinate GetRandomCoordinate()
     {
         Coordinate randomCoordinate = shuffledCoordinates.Dequeue(); // FIFO
         shuffledCoordinates.Enqueue(randomCoordinate);
         return randomCoordinate;
+    }
+
+    public Transform GetRandomOpenTile()
+    {
+        Coordinate randomCoordinate = shuffledOpenTileCoordinates.Dequeue(); // FIFO
+        shuffledOpenTileCoordinates.Enqueue(randomCoordinate);
+        return tileMap[randomCoordinate.x, randomCoordinate.y];
     }
 
     Vector3 CoordinateToPosition(int x, int y)
