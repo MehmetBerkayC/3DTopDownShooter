@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.AI;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -31,9 +32,16 @@ public class MapGenerator : MonoBehaviour
 
     private void Start()
     {
-        GenerateMap();
+        FindObjectOfType<Spawner>().OnNewWave += OnNewWave;
     }
     
+    void OnNewWave(int waveNumber)
+    {
+        mapIndex = waveNumber - 1;
+        GenerateMap();
+        NavMeshBuilder.BuildNavMesh();
+    }
+
     public void GenerateMap()
     {
         currentMap = maps[mapIndex];

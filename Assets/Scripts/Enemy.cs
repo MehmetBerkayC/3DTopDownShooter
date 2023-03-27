@@ -9,6 +9,8 @@ public class Enemy : LivingEntity
 {
     public enum State { Idle, Chasing, Attacking }
 
+    [SerializeField] ParticleSystem deathEffect;
+
     State currentState;
 
     LivingEntity targetEntity;
@@ -61,6 +63,15 @@ public class Enemy : LivingEntity
     {
         hasTarget = false;
         currentState = State.Idle;
+    }
+
+    public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
+    {
+        if(damage >= health)
+        {
+            Destroy(Instantiate(deathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection)), deathEffect.main.startLifetime.constant);
+        }
+        base.TakeHit(damage, hitPoint, hitDirection);
     }
 
     // Update is called once per frame
