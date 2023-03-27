@@ -139,12 +139,12 @@ public class MapGenerator : MonoBehaviour
         Transform maskRight = Instantiate(navMeshMaskPrefab, Vector3.right * (currentMap.mapSize.x + maxMapSize.x) / 4f * tileSize, Quaternion.identity);
         maskRight.parent = mapHolder;
         maskRight.localScale = new Vector3((maxMapSize.x - currentMap.mapSize.x) / 2f, 1f, currentMap.mapSize.y) * tileSize;
-       
+
         // Right Mask
         Transform maskTop = Instantiate(navMeshMaskPrefab, Vector3.forward * (currentMap.mapSize.y + maxMapSize.y) / 4f * tileSize, Quaternion.identity);
         maskTop.parent = mapHolder;
         maskTop.localScale = new Vector3(maxMapSize.x, 1f, (maxMapSize.y - currentMap.mapSize.y) / 2f) * tileSize;
-        
+
         // Right Mask
         Transform maskDown = Instantiate(navMeshMaskPrefab, Vector3.back * (currentMap.mapSize.y + maxMapSize.y) / 4f * tileSize, Quaternion.identity);
         maskDown.parent = mapHolder;
