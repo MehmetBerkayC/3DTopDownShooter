@@ -17,7 +17,7 @@ public class Enemy : LivingEntity
 
     NavMeshAgent pathfinder;
     Transform target;
-    Material material;
+    Material skinMaterial;
 
     Color originalColor;
 
@@ -32,28 +32,33 @@ public class Enemy : LivingEntity
 
     float damage = 1f;
 
+    private void Awake()
+    {
+        pathfinder = GetComponent<NavMeshAgent>();
+
+
+        if (GameObject.FindGameObjectWithTag("Player") != null)
+        {
+            hasTarget = true;
+
+            target = GameObject.FindGameObjectWithTag("Player").transform;
+            targetEntity = target.GetComponent<LivingEntity>();
+
+            myCollisionRadius = GetComponent<CapsuleCollider>().radius;
+            targetCollisionRadius = target.GetComponent<CapsuleCollider>().radius;
+        }
+    }
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
 
-        pathfinder = GetComponent<NavMeshAgent>();
-
-        material = GetComponent<Renderer>().material;
-        originalColor = material.color;
-
-        if(GameObject.FindGameObjectWithTag("Player") != null)
+        if(hasTarget)
         {
             currentState = State.Chasing;
-            hasTarget = true;
 
-            target = GameObject.FindGameObjectWithTag("Player").transform;
-            targetEntity = target.GetComponent<LivingEntity>();
             targetEntity.OnDeath += OnTargetDeath;
-
-            myCollisionRadius = GetComponent<CapsuleCollider>().radius;
-            targetCollisionRadius = target.GetComponent<CapsuleCollider>().radius;
 
             StartCoroutine(UpdatePath());
         }
@@ -74,10 +79,27 @@ public class Enemy : LivingEntity
         base.TakeHit(damage, hitPoint, hitDirection);
     }
 
+    public void SetCharacteristics(float moveSpeed, int hitsToKillPlayer, float enemyHealth, Color skinColor)
+    {
+        pathfinder.speed = moveSpeed;
+
+        if(hasTarget){
+            damage = Mathf.Ceil(targetEntity.startingHealth / hitsToKillPlayer);
+        }
+        startingHealth = enemyHealth;
+
+        skinMaterial = GetComponent<Renderer>().material;
+        originalColor = skinMaterial.color;
+        skinMaterial.color = skinColor;
+
+
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (hasTarget)
+        if (hasTarget && this.gameObject.activeInHierarchy)
         {
             if (Time.time > nextAttackTime)
             {
@@ -94,7 +116,7 @@ public class Enemy : LivingEntity
     IEnumerator Attack()
     {
         currentState = State.Attacking;
-        material.color = Color.red;
+        skinMaterial.color = Color.red;
 
         Vector3 originalPosition = transform.position;
         Vector3 directionToTarget = (target.position - transform.position).normalized;
@@ -119,7 +141,7 @@ public class Enemy : LivingEntity
             yield return null;
         }
 
-        material.color = originalColor;
+        skinMaterial.color = originalColor;
         currentState = State.Chasing;
     }
 

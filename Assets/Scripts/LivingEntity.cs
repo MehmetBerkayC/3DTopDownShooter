@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class LivingEntity : MonoBehaviour, IDamageable
 {
-    [SerializeField]
-    float startingHealth;
+    public float startingHealth;
     
     protected float health;
     protected bool dead;

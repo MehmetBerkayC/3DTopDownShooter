@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    public bool devMode;
+
     [SerializeField] Wave[] waves;
     [SerializeField] Enemy enemy;
 
@@ -25,9 +27,10 @@ public class Spawner : MonoBehaviour
     float nextCampingCheckTime;
 
     Vector3 campPositionOld;
-    bool isCamping;
     
+    bool isCamping;
     bool isDisabled;
+
 
     public event System.Action<int> OnNewWave;
 
@@ -76,12 +79,25 @@ public class Spawner : MonoBehaviour
 
             }
 
-            if (enemiesRemainingToSpawn > 0 && Time.time > nextSpawnTime)
+            if ((enemiesRemainingToSpawn > 0 || currentWave.infinite) && Time.time > nextSpawnTime)
             {
                 enemiesRemainingToSpawn--;
                 nextSpawnTime = Time.time + currentWave.timeBetweenSpawns;
 
-                StartCoroutine(SpawnEnemy());
+                StartCoroutine("SpawnEnemy");
+            }
+        }
+
+        if (devMode)
+        {
+            if (Input.GetKeyDown(KeyCode.Backspace))
+            {
+                StopCoroutine("SpawnEnemy");
+                foreach (Enemy enemy in FindObjectsOfType<Enemy>())
+                {
+                    GameObject.Destroy(enemy.gameObject);
+                }
+                NextWave();
             }
         }
     }
@@ -99,7 +115,7 @@ public class Spawner : MonoBehaviour
         }
 
         Material tileMat = spawnTile.GetComponent<Renderer>().material;
-        Color initialColor = tileMat.color;
+        Color initialColor = Color.white;
         Color flashColor = Color.red;
         float spawnTimer = 0f;
 
@@ -115,6 +131,7 @@ public class Spawner : MonoBehaviour
         // after flashing spawn
         Enemy spawnedEnemy = Instantiate(enemy, spawnTile.position + Vector3.up, Quaternion.identity);
         spawnedEnemy.OnDeath += OnEnemyDeath;
+        spawnedEnemy.SetCharacteristics(currentWave.moveSpeed, currentWave.hitsToKillPlayer, currentWave.enemyHealth, currentWave.skinColor);
     }
 
     void OnPlayerDeath()

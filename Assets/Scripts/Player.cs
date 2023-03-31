@@ -7,6 +7,8 @@ using UnityEngine;
 public class Player : LivingEntity
 {
     [SerializeField] float moveSpeed = 5f;
+    
+    [SerializeField] Crosshairs crosshair;
 
     Camera viewCamera;
     PlayerController controller;
@@ -39,12 +41,22 @@ public class Player : LivingEntity
             //Debug.DrawLine(ray.origin, point, Color.green);
 
             controller.LookAt(point);
+            
+            //Crosshair
+            crosshair.transform.position = point;
+            crosshair.DetectTargets(ray, rayDistance);
         }
 
         // Weapon Input
         if (Input.GetMouseButton(0))
         {
-            gunController.Shoot();
+            gunController.OnTriggerHold();
         }
+        
+        if (Input.GetMouseButtonUp(0))
+        {
+            gunController.OnTriggerRelease();
+        }
+
     }
 }

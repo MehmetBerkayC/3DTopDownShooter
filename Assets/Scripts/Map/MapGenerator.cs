@@ -15,6 +15,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] Transform tilePrefab;
     [SerializeField] Transform obstaclePrefab;
 
+    [SerializeField] Transform mapFloor;
     [SerializeField] Vector2 maxMapSize;
 
     [SerializeField] float tileSize;
@@ -48,8 +49,6 @@ public class MapGenerator : MonoBehaviour
         tileMap = new Transform[currentMap.mapSize.x, currentMap.mapSize.y];
 
         System.Random prng = new System.Random(currentMap.seed); // prng -> pseudo random number generation/generator
-
-        GetComponent<BoxCollider>().size = new Vector3(currentMap.mapSize.x * tileSize, .05f, currentMap.mapSize.y * tileSize);
 
         // Generating Coordinates
         allTileCoordinates = new List<Coordinate>();
@@ -152,6 +151,8 @@ public class MapGenerator : MonoBehaviour
 
         // NavMeshFloor
         navMeshFloor.localScale = new Vector3(maxMapSize.x, maxMapSize.y, 0f) * tileSize;
+     
+        mapFloor.localScale = new Vector3(currentMap.mapSize.x * tileSize, currentMap.mapSize.y * tileSize);
     }
 
     bool MapIsFullyAccessible(bool[,] obstacleMap, int currentObstacleCount)
