@@ -13,6 +13,8 @@ public class Shell : MonoBehaviour
     [SerializeField] float lifetime;
     [SerializeField] float fadetime;
 
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();

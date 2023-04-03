@@ -25,7 +25,7 @@ public class GunController : MonoBehaviour
         {
             Destroy(equippedGun.gameObject);
         }
-        equippedGun = Instantiate(gunToEquip, weaponHold.position, weaponHold.rotation) as Gun;
+        equippedGun = Instantiate(gunToEquip, weaponHold.position, weaponHold.rotation);
         equippedGun.transform.parent = weaponHold;
 
     }
@@ -46,6 +46,21 @@ public class GunController : MonoBehaviour
         }
     }
 
+    public void Reload()
+    {
+        if(equippedGun != null)
+        {
+            equippedGun.Reload();
+        }
+    }
+
+    public void Aim(Vector3 aimPoint)
+    {
+        if(equippedGun != null)
+        {
+            equippedGun.Aim(aimPoint);
+        }
+    }
     public float GunHeight
     {
         get

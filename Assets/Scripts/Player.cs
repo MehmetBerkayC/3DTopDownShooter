@@ -31,20 +31,32 @@ public class Player : LivingEntity
 
         // Look Input
         Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.up);
         float rayDistance;
 
         // if the ray intersects with the ground plane
         if (groundPlane.Raycast(ray, out rayDistance))
         {
             Vector3 point = ray.GetPoint(rayDistance);
-            //Debug.DrawLine(ray.origin, point, Color.green);
+            Debug.DrawLine(ray.origin, point, Color.green);
 
             controller.LookAt(point);
             
             //Crosshair
             crosshair.transform.position = point;
             crosshair.DetectTargets(ray, rayDistance);
+
+            if ((new Vector2(point.x, point.z) - new Vector2(transform.position.x, transform.position.z)).sqrMagnitude > 1f)
+            {
+                gunController.Aim(point);
+            }
+        }
+
+
+        // Reload
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            gunController.Reload();
         }
 
         // Weapon Input

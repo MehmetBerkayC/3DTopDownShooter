@@ -562,7 +562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponHold: {fileID: 341271870}
-  startingWeapon: {fileID: -2705860859365334984, guid: 2cd24e0c625859044af0848e4c89ff46, type: 3}
+  startingWeapon: {fileID: 4891341607685479413, guid: 237a600ee42f82c408d98142840c0110, type: 3}
 --- !u!1 &50604320
 GameObject:
   m_ObjectHideFlags: 0
@@ -2627,7 +2627,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341271869}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.15, y: 0.25, z: 0.75}
+  m_LocalPosition: {x: 0.3, y: 0.25, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15737,7 +15737,7 @@ MonoBehaviour:
   devMode: 1
   waves:
   - infinite: 0
-    enemyCount: 40
+    enemyCount: 0
     timeBetweenSpawns: 0.7
     moveSpeed: 2.2
     hitsToKillPlayer: 5
