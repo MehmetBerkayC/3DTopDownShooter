@@ -14,12 +14,18 @@ public class Player : LivingEntity
     PlayerController controller;
     GunController gunController;
 
-    protected override void Start()
+
+    private void Awake()
     {
-        base.Start();
         controller = GetComponent<PlayerController>();
         gunController = GetComponent<GunController>();
         viewCamera = Camera.main;
+        FindObjectOfType<Spawner>().OnNewWave += OnNewWave;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
     }
 
     void Update()
@@ -70,5 +76,11 @@ public class Player : LivingEntity
             gunController.OnTriggerRelease();
         }
 
+    }
+
+    void OnNewWave(int waveNumber)
+    {
+        health = startingHealth;
+        gunController.EquipGun(waveNumber - 1);
     }
 }

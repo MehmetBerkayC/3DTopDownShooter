@@ -7,7 +7,7 @@ public class Spawner : MonoBehaviour
 {
     public bool devMode;
 
-    [SerializeField] Wave[] waves;
+    public Wave[] waves;
     [SerializeField] Enemy enemy;
 
     LivingEntity playerEntity;
@@ -48,10 +48,12 @@ public class Spawner : MonoBehaviour
         NextWave();
     }
 
+  
     private void NextWave()
     {
         currentWaveNumber++;
         print("Wave " + currentWaveNumber);
+
         if(currentWaveNumber <= waves.Length)
         {
             currentWave = waves[currentWaveNumber - 1];
@@ -64,6 +66,8 @@ public class Spawner : MonoBehaviour
                 OnNewWave(currentWaveNumber);
             }
         }
+
+        ResetPlayerPosition();
     }
 
     private void Update()

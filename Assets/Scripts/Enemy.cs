@@ -88,11 +88,9 @@ public class Enemy : LivingEntity
         }
         startingHealth = enemyHealth;
 
-        skinMaterial = GetComponent<Renderer>().material;
+        skinMaterial = GetComponent<Renderer>().sharedMaterial;
         originalColor = skinMaterial.color;
         skinMaterial.color = skinColor;
-
-
         
     }
 
