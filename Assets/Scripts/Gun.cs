@@ -55,7 +55,7 @@ public class Gun : MonoBehaviour
 
         projectilesInMagazine = magazineSize;
 
-        shell.transform.localScale = shellScale;
+        shell.transform.localScale = shellScale; // check if working right
     }
 
     private void Update()

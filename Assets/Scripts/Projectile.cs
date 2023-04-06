@@ -18,7 +18,7 @@ public class Projectile : MonoBehaviour
 
     void Start()
     {
-        Destroy(this, lifetime);
+        Destroy(this.gameObject, lifetime);
 
         Collider[] initialCollisions = Physics.OverlapSphere(transform.position, 0.1f, collisionMask);
     
