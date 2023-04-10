@@ -22,6 +22,9 @@ public class Gun : MonoBehaviour
     [SerializeField] Vector3 shellScale;
     [SerializeField] Transform shellEjectionPoint;
 
+    [SerializeField] AudioClip audioShoot;
+    [SerializeField] AudioClip audioReload;
+
     [Header("Recoil")]  // Recoil
     [SerializeField] float recoilMovementSettleTime = 0.1f;
     [SerializeField] float recoilRotationSettleTime = 0.1f;
@@ -110,6 +113,8 @@ public class Gun : MonoBehaviour
             transform.localPosition -= Vector3.forward * Random.Range(recoilKickMinMax.x, recoilKickMinMax.y);
             recoilAngle += Random.Range(recoilAngleMinMax.x, recoilAngleMinMax.y);
             recoilAngle = Mathf.Clamp(recoilAngle, 0, 30);
+
+            AudioManager.instance.PlaySound(audioShoot, transform.position);
         }
     }
 
@@ -118,6 +123,7 @@ public class Gun : MonoBehaviour
         if(!isReloading && projectilesInMagazine != magazineSize)
         {
             StartCoroutine(AnimationReload());
+            AudioManager.instance.PlaySound(audioReload, transform.position);
         }
     }
 
