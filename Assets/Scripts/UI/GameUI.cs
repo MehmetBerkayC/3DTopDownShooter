@@ -42,6 +42,7 @@ public class GameUI : MonoBehaviour
 
     IEnumerator AnimateWaveBanner()
     {
+        waveBanner.gameObject.SetActive(true);
         float delayTime = 1.5f;
         float speed = 2.5f;
         float animatePercentage = 0;
@@ -65,6 +66,8 @@ public class GameUI : MonoBehaviour
             waveBanner.anchoredPosition = Vector2.up * Mathf.Lerp(-630, -356, animatePercentage);
             yield return null;
         }
+
+        waveBanner.gameObject.SetActive(false);
     }
  
     IEnumerator Fade(Color from, Color to, float time)
