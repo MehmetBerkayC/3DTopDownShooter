@@ -12,6 +12,7 @@ public class Enemy : LivingEntity
     [SerializeField] ParticleSystem deathEffect;
 
     State currentState;
+    public static event System.Action OnDeathStatic;
 
     LivingEntity targetEntity;
 
@@ -74,8 +75,12 @@ public class Enemy : LivingEntity
     {
         AudioManager.instance.PlaySound("Impact", transform.position);
 
-        if(damage >= health)
+        if(damage >= Health)
         {
+            if(OnDeathStatic != null)
+            {
+                OnDeathStatic();
+            }
             AudioManager.instance.PlaySound("Enemy Death", transform.position);
             Destroy(Instantiate(deathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection)), deathEffect.main.startLifetime.constant);
         }
@@ -91,9 +96,12 @@ public class Enemy : LivingEntity
         }
         startingHealth = enemyHealth;
 
-        skinMaterial = GetComponent<Renderer>().sharedMaterial;
-        originalColor = skinMaterial.color;
+        ParticleSystem.MainModule main = deathEffect.main;
+        main.startColor = new Color(skinColor.r, skinColor.g, skinColor.b, 1f);
+
+        skinMaterial = GetComponent<Renderer>().material;
         skinMaterial.color = skinColor;
+        originalColor = skinMaterial.color;
         
     }
 

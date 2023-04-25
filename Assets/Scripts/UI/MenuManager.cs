@@ -10,6 +10,7 @@ public class MenuManager : MonoBehaviour
     public GameObject optionsMenuHolder;
 
     public Slider[] volumeSliders;
+    public Toggle fullscreenToggle;
     public Toggle[] resolutionToggles;
     public int[] screenWidths;
 
@@ -18,7 +19,7 @@ public class MenuManager : MonoBehaviour
     private void Start()
     {
         activeScreenResIndex = PlayerPrefs.GetInt("Screen Resolution Index");
-        bool fullscreen = (PlayerPrefs.GetInt("Fullscreen") == 1) ? true : false;
+        bool isFullscreen = (PlayerPrefs.GetInt("Fullscreen") == 1) ? true : false;
 
         volumeSliders[0].value = AudioManager.instance.masterVolumePercentage;
         volumeSliders[1].value = AudioManager.instance.musicVolumePercentage;
@@ -29,7 +30,7 @@ public class MenuManager : MonoBehaviour
             resolutionToggles[i].isOn = i == activeScreenResIndex;
         }
 
-        SetFullscreen(fullscreen);
+        fullscreenToggle.isOn = isFullscreen;
     }
 
     public void Play()

@@ -76,11 +76,17 @@ public class Player : LivingEntity
             gunController.OnTriggerRelease();
         }
 
+        // die if fallen from map
+        if(transform.position.y < -10f)
+        {
+            TakeDamage(Health);
+        }
+
     }
 
     void OnNewWave(int waveNumber)
     {
-        health = startingHealth;
+        Health = startingHealth;
         gunController.EquipGun(waveNumber - 1);
     }
 

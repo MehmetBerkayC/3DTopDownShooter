@@ -10,22 +10,44 @@ public class GameUI : MonoBehaviour
 {
     [SerializeField] Image fadePlane;
     [SerializeField] GameObject gameoverUI;
+    [SerializeField] GameObject inGameUI;
 
     [SerializeField] RectTransform waveBanner;
     [SerializeField] TMP_Text waveTitle;
     [SerializeField] TMP_Text waveEnemyCount;
+    
+    [SerializeField] TMP_Text scoreText;
+    [SerializeField] RectTransform healthBar;
+
+    [SerializeField] TMP_Text gameoverScoreText;
 
     Spawner spawner;
+    Player player;
 
     private void Start()
     {
-        FindObjectOfType<Player>().OnDeath += OnGameOver;
+        player = FindObjectOfType<Player>();
+        player.OnDeath += OnGameOver;
     }
 
     void Awake()
     {
         spawner = FindObjectOfType<Spawner>();
         spawner.OnNewWave += OnNewWave;
+    }
+
+    private void Update()
+    {
+        scoreText.text = ScoreKeeper.score.ToString("D6");
+        
+        // health calculation
+        float healthPercentage = 0;
+        if(player != null)
+        {
+            healthPercentage = player.Health / player.startingHealth;
+        }
+        healthBar.localScale = new Vector3(healthPercentage, 1, 1);
+
     }
 
     void OnNewWave(int waveNumber)
@@ -83,16 +105,32 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    // UI Inout
+    // UI Input
     public void StartNewGame()
     {
         SceneManager.LoadScene("Game");
+
+        inGameUI.SetActive(true);
+        gameoverUI.SetActive(false);
+        
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
     }
     
     void OnGameOver()
     {
-        Cursor.visible = true;
-        StartCoroutine(Fade(Color.clear, Color.black, 1f));
+        StartCoroutine(Fade(Color.clear, fadePlane.color, 1f));
+
+        gameoverScoreText.text = scoreText.text;
+
+        inGameUI.SetActive(false);
         gameoverUI.SetActive(true);
+     
+        Cursor.visible = true;
+    }
+
+    public void ReturnMainMenu()
+    {
+        SceneManager.LoadScene("Menu");
     }
 }

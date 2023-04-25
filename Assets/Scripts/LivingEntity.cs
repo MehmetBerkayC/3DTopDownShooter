@@ -6,15 +6,14 @@ using UnityEngine;
 public class LivingEntity : MonoBehaviour, IDamageable
 {
     public float startingHealth;
-    
-    protected float health;
+    public float Health { get; protected set; }
     protected bool dead;
 
     public event System.Action OnDeath;
 
     protected virtual void Start()
     {
-        health = startingHealth;    
+        Health = startingHealth;    
     }
 
     public virtual void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
@@ -25,9 +24,9 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     public virtual void TakeDamage(float damage)
     {
-        health -= damage;
+        Health -= damage;
 
-        if (health <= 0f && !dead)
+        if (Health <= 0f && !dead)
         {
             Die();
         }
