@@ -10,12 +10,6 @@ public class GunController : MonoBehaviour
 
     Gun equippedGun;
 
-
-    private void Start()
-    {
-        
-    }
-
     public void EquipGun(Gun gunToEquip)
     {
         if(equippedGun != null)
@@ -26,7 +20,7 @@ public class GunController : MonoBehaviour
         equippedGun.transform.parent = weaponHold;
 
     }
-    
+
     public void EquipGun(int weaponIndex)
     {
         EquipGun(allGuns[weaponIndex]);
